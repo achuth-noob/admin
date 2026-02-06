@@ -13,7 +13,7 @@ import {
 
 // Create Axios instance
 const api: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL, // Update with your actual API URL
+  baseURL: "https://api.oneinfer.ai", // Update with your actual API URL
   headers: {
     'Content-Type': 'application/json',
   },

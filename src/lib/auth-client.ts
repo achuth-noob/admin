@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = "https://api.oneinfer.ai";
 
 export async function sendOtp({ email }: { email: string }) {
     try {
