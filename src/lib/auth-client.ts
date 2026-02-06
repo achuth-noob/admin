@@ -1,23 +1,50 @@
+import axios from "axios";
 
-// Mock Auth Service for UI development
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
 export async function sendOtp({ email }: { email: string }) {
-    console.log("Sending OTP to", email);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return { kind: "success" };
+    try {
+        await axios.post(`${API_URL}/admin/generate-and-send-otp-to-email`, null, {
+            params: { admin_email: email }
+        });
+        return { kind: "success" };
+    } catch (error: any) {
+        console.error("Send OTP error:", error);
+        return { 
+            kind: "error", 
+            message: error.response?.data?.detail || error.message || "Failed to send OTP" 
+        };
+    }
 }
 
 export async function login({ email, otp }: { email: string, otp: string }) {
-    console.log("Logging in with", email, otp);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    if (otp === "123456") {
+    try {
+        const response = await axios.post(`${API_URL}/admin/verify-otp-for-login`, {
+            email: email,
+            otp: parseInt(otp, 10)
+        });
+
+        const { access_token, admin_id } = response.data.dataResponse;
+
+        if (typeof window !== "undefined") {
+            localStorage.setItem("accessToken", access_token);
+            localStorage.setItem("adminId", admin_id);
+            localStorage.setItem("userEmail", email);
+        }
+
         return { kind: "success" };
+    } catch (error: any) {
+        console.error("Login error:", error);
+        return { 
+            kind: "error", 
+            message: error.response?.data?.detail || error.message || "Login failed" 
+        };
     }
-    // Return success for any OTP for development simplicity unless specifically testing error
-    return { kind: "success" };
 }
 
 export async function googleLogin({ clientId, credential }: { clientId: string, credential: string, select_by: string }) {
-    console.log("Google Login", clientId);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return { kind: "success" };
+    // There is no admin google login endpoint identified yet.
+    // Keeping mock for now or ignoring.
+    console.warn("Google login not implemented for Admin console");
+    return { kind: "error", message: "Google login not supported for Admins yet." };
 }
