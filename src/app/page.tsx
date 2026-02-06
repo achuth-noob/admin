@@ -246,7 +246,7 @@ export default function LoginPage() {
 
         <div className="w-full max-w-lg text-center mb-10">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            {step === 1 ? 'Welcome Back' : 'Enter OTP'}
+            {step === 1 ? 'Admin Console Login' : 'Enter OTP'}
           </h1>
           <p className="text-lg text-gray-600">
             {step === 1 ? 'Sign in to continue' : `We sent a code to ${email}`}
