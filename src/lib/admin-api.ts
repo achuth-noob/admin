@@ -13,7 +13,7 @@ import {
 
 // Create Axios instance
 const api: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000', // Update with your actual API URL
+  baseURL: process.env.NEXT_PUBLIC_API_URL, // Update with your actual API URL
   headers: {
     'Content-Type': 'application/json',
   },
@@ -49,44 +49,44 @@ api.interceptors.request.use(
 export const AdminApi = {
   // Admin User Management
   getAdminDetails: async (): Promise<AdminUser[]> => {
-    const response = await api.get<ApiResponse<{ data: AdminUser[] }>>('/admin/get-admin-details');
+    const response = await api.get<ApiResponse<{ data: AdminUser[] }>>('/v1/admin/get-admin-details');
     return response.data.dataResponse.data;
   },
 
   // Model Management
   getAllModels: async (): Promise<ModelProvider[]> => {
-    const response = await api.get<GetModelsResponse>('/admin/get-models');
+    const response = await api.get<GetModelsResponse>('/v1/admin/get-models');
     return response.data.models_available;
   },
 
   getModelPricing: async (providerName: string): Promise<ModelPricing[]> => {
-    const response = await api.get<ApiResponse<ModelPricing[]>>('/admin/get-model-pricing', {
+    const response = await api.get<ApiResponse<ModelPricing[]>>('/v1/admin/get-model-pricing', {
       params: { model_provider_name: providerName }
     });
     return response.data.dataResponse;
   },
 
   addModelPricing: async (modelId: string, data: ModelWithPricingRequest): Promise<void> => {
-    await api.post('/admin/insert-model-pricing', data, {
+    await api.post('/v1/admin/insert-model-pricing', data, {
       params: { model_id: modelId }
     });
   },
 
   updateModelPricing: async (modelId: string, data: ModelWithPricingRequest): Promise<void> => {
-    await api.put('/admin/update-model-pricing', data, {
+    await api.put('/v1/admin/update-model-pricing', data, {
       params: { model_id: modelId }
     });
   },
 
   deleteModelPricing: async (modelId: string, providerName: string): Promise<void> => {
-    await api.delete('/admin/delete-model-pricing', {
+    await api.delete('/v1/admin/delete-model-pricing', {
       params: { model_id: modelId, provider_name: providerName }
     });
   },
 
   // GPU Pricing Management
   getGpuPricingList: async (providerName: string): Promise<GpuPricing[]> => {
-    const response = await api.get<GpuPricing[]>('/admin/get-gpu-pricing-list', {
+    const response = await api.get<GpuPricing[]>('/v1/admin/get-gpu-pricing-list', {
        params: { gpu_provider_name: providerName }
     });
     // The backend returns the list directly based on the inspected code
@@ -94,14 +94,14 @@ export const AdminApi = {
   },
 
   getGpuPricing: async (gpuId: string): Promise<GpuPricing> => {
-    const response = await api.get<GpuPricing>('/admin/get-gpu-pricing', {
+    const response = await api.get<GpuPricing>('/v1/admin/get-gpu-pricing', {
       params: { gpu_id: gpuId }
     });
     return response.data;
   },
 
   addGpuPricing: async (data: GpuPricingRequest): Promise<void> => {
-    await api.post('/admin/insert-gpu-pricing', data);
+    await api.post('/v1/admin/insert-gpu-pricing', data);
   },
   
   // Note: The backend endpoint name was `gpu_pricing_models` mapped to `/admin/gpu-pricing` 
@@ -110,17 +110,17 @@ export const AdminApi = {
   // I'll stick to `insert-gpu-pricing` as it seems more standard.
 
   updateGpuPricing: async (data: UpdateGpuPricingRequest): Promise<void> => {
-    await api.put('/admin/update-gpu-pricing', data);
+    await api.put('/v1/admin/update-gpu-pricing', data);
   },
 
   deleteGpuPricing: async (gpuId: string): Promise<void> => {
-    await api.delete('/admin/delete-gpu-pricing', {
+    await api.delete('/v1/admin/delete-gpu-pricing', {
       params: { gpu_id: gpuId }
     });
   },
   
   syncGpuPricingFromApis: async (): Promise<any> => {
-      const response = await api.post('/admin/insert-gpu-pricing-from-apis');
+      const response = await api.post('/v1/admin/insert-gpu-pricing-from-apis');
       return response.data.dataResponse;
   }
 };

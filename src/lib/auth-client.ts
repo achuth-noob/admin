@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function sendOtp({ email }: { email: string }) {
     try {
-        await axios.post(`${API_URL}/admin/generate-and-send-otp-to-email`, null, {
+        await axios.post(`${API_URL}/v1/admin/generate-and-send-otp-to-email`, null, {
             params: { admin_email: email }
         });
         return { kind: "success" };
@@ -19,7 +19,7 @@ export async function sendOtp({ email }: { email: string }) {
 
 export async function login({ email, otp }: { email: string, otp: string }) {
     try {
-        const response = await axios.post(`${API_URL}/admin/verify-otp-for-login`, {
+        const response = await axios.post(`${API_URL}/v1/admin/verify-otp-for-login`, {
             email: email,
             otp: parseInt(otp, 10)
         });
